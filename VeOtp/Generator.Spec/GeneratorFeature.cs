@@ -30,7 +30,7 @@ namespace Ve.Otp.Generator.Spec
             "And a generator"
                 .f(() => { generator = new OtpGenerator(); });
             "When I generate a series of OTPs"
-                .f(() => { otps = userIds.Select(generator.generate); });
+                .f(() => { otps = userIds.Select(u => generator.generate(u)); });
             "They should be unique for each user."
                 .f(() => { otps.Should().OnlyHaveUniqueItems(); });
         }
@@ -51,6 +51,7 @@ namespace Ve.Otp.Generator.Spec
         }
 
         [Scenario]
+        [Example(0, true)]
         [Example(30, true)]
         [Example(60, false)]
         [Example(-35, false)]
