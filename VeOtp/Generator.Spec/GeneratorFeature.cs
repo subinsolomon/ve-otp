@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Smocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,30 +51,31 @@ namespace Ve.Otp.Generator.Spec
         }
 
         [Scenario]
-        public void ValidationWithinTime()
+        [Example(30, true)]
+        [Example(60, false)]
+        [Example(-35, false)]
+        public void ValidationWithinTime(int secondsAgo, bool shouldBeValid, string userId, string otp, OtpValidator validator, bool isValid)
         {
             "Given a User ID"
-                .f(() => { });
-            "And a OTP generated 30 seconds ago"
-                .f(() => { });
+                .f(() => { userId = "tom123"; });
+            $"And a OTP generated {secondsAgo} seconds ago"
+                .f(() => {
+                    Smock.Run(context => // ToDo: Switch to Fakes with VS2015 Enterprise.
+                    {
+                        var now = DateTime.UtcNow;
+                        context.Setup(() => DateTime.UtcNow).Returns(now.AddSeconds(-secondsAgo));
+                        otp = (new OtpGenerator()).generate(userId);
+                        context.Setup(() => DateTime.UtcNow).Returns(now);
+                    });
+                });
+            "And a OTP validator"
+                .f(() => { validator = new OtpValidator(); });
             "When I verify my OTP"
-                .f(() => { });
-            "It should be valid."
-                .f(() => { throw new NotImplementedException(); });
-        }
+                .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp); });
 
-        [Scenario]
-        public void ValidationOutsideOfTime()
-        {
-            "Given a User ID"
-                .f(() => { });
-            "And a OTP generated outside of 30 seconds ago"
-                .f(() => { });
-            "When I verify my OTP"
-                .f(() => { });
-            "It should be invalid."
-                .f(() => { throw new NotImplementedException(); });
+            string validationWording = shouldBeValid ? "valid" : "invalid";
+            $"It should be {validationWording}."
+                .f(() => { isValid.Should().Be(shouldBeValid); });
         }
-
     }
 }
