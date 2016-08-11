@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using Xbehave;
 
 namespace Ve.Otp.Generator.Spec
@@ -6,16 +7,16 @@ namespace Ve.Otp.Generator.Spec
     public class GeneratorFeature
     {
         [Scenario]
-        public void Generation()
+        public void Generation(string userId, OtpGenerator generator, string otp)
         {
             "Given a User ID"
                 .f(() => { });
             "And a generator"
-                .f(() => { });
+                .f(() => { generator = new OtpGenerator(); });
             "When I request a OTP"
-                .f(() => { });
+                .f(() => { otp = generator.generate(userId); });
             "Then I should be given a short, typable, password."
-                .f(() => { throw new NotImplementedException(); });
+                .f(() => { otp.Should().MatchRegex(@"^\w{6}$"); });
         }
 
         [Scenario]
