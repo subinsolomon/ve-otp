@@ -35,16 +35,18 @@ namespace Ve.Otp.Generator.Spec
         }
 
         [Scenario]
-        public void Validation()
+        public void Validation(string userId, string otp, OtpValidator validator, bool isValid)
         {
             "Give a User ID"
-                .f(() => { });
+                .f(() => { userId = "tom123"; });
             "And a generated OTP for that ID"
-                .f(() => { });
+                .f(() => { otp = (new OtpGenerator()).generate(userId); });
+            "And a OTP validator"
+                .f(() => { validator = new OtpValidator() });
             "When I verify my OTP"
-                .f(() => { });
+                .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp) });
             "It should be valid."
-                .f(() => { throw new NotImplementedException(); });
+                .f(() => { isValid.Should().BeTrue(); });
         }
 
         [Scenario]
