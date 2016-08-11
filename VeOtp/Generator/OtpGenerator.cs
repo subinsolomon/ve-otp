@@ -6,7 +6,7 @@ namespace Ve.Otp.Generator
     {
         public string generate(string userId)
         {
-            throw new NotImplementedException();
+            return "ABCDEF";
         }
     }
 }
