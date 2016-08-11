@@ -18,7 +18,8 @@ namespace Ve.Otp.Authentication
         {
             return GenerateUserOtpFromIdAndCounter(userId, Counter.Current);
         }
-        public string GenerateUserOtpFromIdAndCounter(string userId, long counter)
+
+        internal string GenerateUserOtpFromIdAndCounter(string userId, long counter)
         {
             var key = KeyFromUserId(userId);
             return TotpFromKeyAndCounter(key, counter);

@@ -12,10 +12,10 @@ namespace Ve.Otp.Authentication
             MinimumExpiryInSeconds = int.Parse(ConfigurationManager.AppSettings["minimumValidityTimeInSeconds"] ?? "30");
         }
 
-        public static long Current =>
+        internal static long Current =>
             (long)DateTime.UtcNow.Subtract(Epoch).TotalSeconds / IntervalInSeconds;
 
-        public static IEnumerable<long> ValidCounters
+        internal static IEnumerable<long> ValidCounters
         {
             get
             {
@@ -28,10 +28,9 @@ namespace Ve.Otp.Authentication
         }
 
 
-        internal static int IntervalInSeconds { get; }
+        private static int IntervalInSeconds { get; }
+        private static int MinimumExpiryInSeconds { get; }
 
-        internal static DateTime Epoch { get; } = new DateTime(1970, 1, 1);
-
-        internal static int MinimumExpiryInSeconds { get; }
+        private static DateTime Epoch { get; } = new DateTime(1970, 1, 1);
     }
 }
