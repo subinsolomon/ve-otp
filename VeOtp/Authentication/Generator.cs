@@ -6,12 +6,6 @@ namespace Ve.Otp.Authentication
 {
     public class Generator
     {
-        private HMACSHA1 KeyFunction { get; }
-
-        private DateTime CounterEpoch { get; } = new DateTime(1970, 1, 1);
-
-        private const int OtpLength = 6;
-
         public Generator()
         {
             const string SecretKey = "1234567812345678"; // Todo: Make secret.
@@ -22,16 +16,14 @@ namespace Ve.Otp.Authentication
         {
             return GenerateUserOtpFromIdAndCounter(userId, CurrentCounter);
         }
-
         public string GenerateUserOtpFromIdAndCounter(string userId, long counter)
         {
             var key = KeyFromUserId(userId);
             return TotpFromKeyAndCounter(key, counter);
         }
 
-        private int Interval { get; } = 30;
-
         public long CurrentCounter => (long)DateTime.UtcNow.Subtract(CounterEpoch).TotalSeconds / Interval;
+
 
         private byte[] KeyFromUserId(string userId)
         {
@@ -58,5 +50,12 @@ namespace Ve.Otp.Authentication
             string paddedCode = code.ToString().PadLeft(OtpLength, '0');
             return paddedCode.Substring(paddedCode.Length - OtpLength);
         }
+
+        private HMACSHA1 KeyFunction { get; }
+
+        private int Interval { get; } = 30;
+        private DateTime CounterEpoch { get; } = new DateTime(1970, 1, 1);
+
+        private const int OtpLength = 6;
     }
 }
