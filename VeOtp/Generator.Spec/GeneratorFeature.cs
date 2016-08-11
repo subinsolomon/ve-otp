@@ -12,13 +12,13 @@ namespace Ve.Otp.Generator.Spec
         public void Generation(string userId, OtpGenerator generator, string otp)
         {
             "Given a User ID"
-                .f(() => { userId = "thomas_michael_wallace_13"; });
+                .f(() => { userId = "thomas_michael_wallace13"; });
             "And a generator"
                 .f(() => { generator = new OtpGenerator(); });
             "When I request a OTP"
                 .f(() => { otp = generator.generate(userId); });
             "Then I should be given a short, typable, password."
-                .f(() => { otp.Should().MatchRegex(@"^\w{6}$"); });
+                .f(() => { otp.Should().MatchRegex(@"^[\w+\\]{6}$"); });
         }
 
         [Scenario]

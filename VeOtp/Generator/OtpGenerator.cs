@@ -11,15 +11,20 @@ namespace Ve.Otp.Generator
 
         public OtpGenerator()
         {
-            const string SecretKey = "thisisntmassivelysecret="; // Todo: Make secret.
-            Hash = new HMACSHA1(Convert.FromBase64String(SecretKey));
+            const string SecretKey = "this isn't massivelysecret"; // Todo: Make secret.
+            Hash = new HMACSHA1(EncodeString(SecretKey));
         }
 
         public string generate(string userId)
         {
-            var fullOtp = Hash.ComputeHash(Convert.FromBase64String(userId));
+            var fullOtp = Hash.ComputeHash(EncodeString(userId));
             var shortOtp = Convert.ToBase64String(fullOtp).Substring(0, OtpLength);
             return shortOtp;
+        }
+
+        private static byte[] EncodeString(string value)
+        {
+            return System.Text.Encoding.UTF8.GetBytes(value);  
         }
     }
 }
