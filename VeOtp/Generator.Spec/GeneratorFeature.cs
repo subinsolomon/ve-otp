@@ -42,7 +42,7 @@ namespace Ve.Otp.Generator.Spec
             "And a generated OTP for that ID"
                 .f(() => { otp = (new OtpGenerator()).generate(userId); });
             "And a OTP validator"
-                .f(() => { validator = new OtpValidator() });
+                .f(() => { validator = new OtpValidator(); });
             "When I verify my OTP"
                 .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp); });
             "It should be valid."
