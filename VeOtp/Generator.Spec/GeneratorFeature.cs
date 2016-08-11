@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Xbehave;
 
 namespace Ve.Otp.Generator.Spec
@@ -20,16 +22,16 @@ namespace Ve.Otp.Generator.Spec
         }
 
         [Scenario]
-        public void Unqiueness()
+        public void Unqiueness(List<string> userIds, OtpGenerator generator, IEnumerable<string> otps)
         {
             "Given a selection of User ID"
-                .f(() => { });
+                .f(() => { userIds = new List<string> { "alice", "bob", "123" }; });
             "And a generator"
-                .f(() => { });
+                .f(() => { generator = new OtpGenerator(); });
             "When I generate a series of OTPs"
-                .f(() => { });
+                .f(() => { otps = userIds.Select(generator.generate); });
             "They should be unique for each user."
-                .f(() => { throw new NotImplementedException(); });
+                .f(() => { otps.Should().OnlyHaveUniqueItems(); });
         }
 
         [Scenario]
