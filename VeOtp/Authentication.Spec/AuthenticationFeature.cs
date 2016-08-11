@@ -3,19 +3,20 @@ using Smocks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Ve.Otp.Authentication;
 using Xbehave;
 
-namespace Ve.Otp.Generator.Spec
+namespace Ve.Otp.Authenticator.Spec
 {
-    public class GeneratorFeature
+    public class AuthenticationFeature
     {
         [Scenario]
-        public void Generation(string userId, OtpGenerator generator, string otp)
+        public void Generation(string userId, Generator generator, string otp)
         {
             "Given a User ID"
                 .f(() => { userId = "thomas_michael_wallace13"; });
             "And a generator"
-                .f(() => { generator = new OtpGenerator(); });
+                .f(() => { generator = new Generator(); });
             "When I request a OTP"
                 .f(() => { otp = generator.generate(userId); });
             "Then I should be given a short, typable, password."
@@ -23,12 +24,12 @@ namespace Ve.Otp.Generator.Spec
         }
 
         [Scenario]
-        public void Unqiueness(List<string> userIds, OtpGenerator generator, IEnumerable<string> otps)
+        public void Unqiueness(List<string> userIds, Generator generator, IEnumerable<string> otps)
         {
             "Given a selection of User ID"
                 .f(() => { userIds = new List<string> { "alexander", "alexandria", "123-456" }; });
             "And a generator"
-                .f(() => { generator = new OtpGenerator(); });
+                .f(() => { generator = new Generator(); });
             "When I generate a series of OTPs"
                 .f(() => { otps = userIds.Select(u => generator.generate(u)); });
             "They should be unique for each user."
@@ -36,14 +37,14 @@ namespace Ve.Otp.Generator.Spec
         }
 
         [Scenario]
-        public void Validation(string userId, string otp, OtpValidator validator, bool isValid)
+        public void Validation(string userId, string otp, Validator validator, bool isValid)
         {
             "Give a User ID"
                 .f(() => { userId = "tom123"; });
             "And a generated OTP for that ID"
-                .f(() => { otp = (new OtpGenerator()).generate(userId); });
+                .f(() => { otp = (new Generator()).generate(userId); });
             "And a OTP validator"
-                .f(() => { validator = new OtpValidator(); });
+                .f(() => { validator = new Validator(); });
             "When I verify my OTP"
                 .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp); });
             "It should be valid."
@@ -55,7 +56,7 @@ namespace Ve.Otp.Generator.Spec
         [Example(30, true)]
         [Example(60, false)]
         [Example(-35, false)]
-        public void ValidationWithinTime(int secondsAgo, bool shouldBeValid, string userId, string otp, OtpValidator validator, bool isValid)
+        public void ValidationWithinTime(int secondsAgo, bool shouldBeValid, string userId, string otp, Validator validator, bool isValid)
         {
             "Given a User ID"
                 .f(() => { userId = "tom123"; });
@@ -65,12 +66,12 @@ namespace Ve.Otp.Generator.Spec
                     {
                         var now = DateTime.UtcNow;
                         context.Setup(() => DateTime.UtcNow).Returns(now.AddSeconds(-secondsAgo));
-                        otp = (new OtpGenerator()).generate(userId);
+                        otp = (new Generator()).generate(userId);
                         context.Setup(() => DateTime.UtcNow).Returns(now);
                     });
                 });
             "And a OTP validator"
-                .f(() => { validator = new OtpValidator(); });
+                .f(() => { validator = new Validator(); });
             "When I verify my OTP"
                 .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp); });
 

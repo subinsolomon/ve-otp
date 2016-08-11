@@ -8,8 +8,8 @@
     <ProjectGuid>{0274A111-6044-4AAC-943E-A91444B6C72A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ve.Otp.Generator.Spec</RootNamespace>
-    <AssemblyName>Ve.Otp.Generator.Spec</AssemblyName>
+    <RootNamespace>Ve.Otp.Authentication.Spec</RootNamespace>
+    <AssemblyName>Ve.Otp.Authentication.Spec</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -95,7 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GeneratorFeature.cs" />
+    <Compile Include="AuthenticationFeature.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -105,9 +105,9 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Generator\Generator.csproj">
+    <ProjectReference Include="..\Authentication\Authentication.csproj">
       <Project>{4ed2ec56-fcce-41a7-be8f-18fdef7bbf05}</Project>
-      <Name>Generator</Name>
+      <Name>Authentication</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

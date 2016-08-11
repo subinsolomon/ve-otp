@@ -2,16 +2,16 @@
 using System.Net;
 using System.Security.Cryptography;
 
-namespace Ve.Otp.Generator
+namespace Ve.Otp.Authentication
 {
-    public class OtpGenerator
+    public class Generator
     {
         private HMACSHA1 Hash { get; }
         private DateTime T0 { get; } = new DateTime(1970, 1, 1);
 
         private const int OtpLength = 6;
 
-        public OtpGenerator()
+        public Generator()
         {
             const string SecretKey = "this isn't massivelysecret"; // Todo: Make secret.
             Hash = new HMACSHA1(EncodeString(SecretKey));

@@ -7,8 +7,8 @@
     <ProjectGuid>{4ED2EC56-FCCE-41A7-BE8F-18FDEF7BBF05}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Ve.Otp.Generator</RootNamespace>
-    <AssemblyName>Ve.Otp.Generator</AssemblyName>
+    <RootNamespace>Ve.Otp.Authentication</RootNamespace>
+    <AssemblyName>Ve.Otp.Authentication</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -40,8 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OtpGenerator.cs" />
-    <Compile Include="OtpValidator.cs" />
+    <Compile Include="Generator.cs" />
+    <Compile Include="Validator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

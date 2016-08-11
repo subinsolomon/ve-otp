@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Linq;
 
-namespace Ve.Otp.Generator
+namespace Ve.Otp.Authentication
 {
-    public class OtpValidator
+    public class Validator
     {
-        private OtpGenerator Generator { get; }
+        private Generator Generator { get; }
 
-        public OtpValidator()
+        public Validator()
         {
-            Generator = new OtpGenerator();
+            Generator = new Generator();
         }
 
         public bool validateUserIdWithOtp(string userId, string otp)
