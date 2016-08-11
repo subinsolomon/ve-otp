@@ -44,7 +44,7 @@ namespace Ve.Otp.Generator.Spec
             "And a OTP validator"
                 .f(() => { validator = new OtpValidator() });
             "When I verify my OTP"
-                .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp) });
+                .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp); });
             "It should be valid."
                 .f(() => { isValid.Should().BeTrue(); });
         }
