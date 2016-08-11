@@ -18,7 +18,7 @@ namespace Ve.Otp.Authenticator.Spec
             "And a generator"
                 .f(() => { generator = new Generator(); });
             "When I request a OTP"
-                .f(() => { otp = generator.generate(userId); });
+                .f(() => { otp = generator.GenerateUserCurrentOtpFromId(userId); });
             "Then I should be given a short, typable, password."
                 .f(() => { otp.Should().MatchRegex(@"^[\w+\\]{6}$"); });
         }
@@ -31,7 +31,7 @@ namespace Ve.Otp.Authenticator.Spec
             "And a generator"
                 .f(() => { generator = new Generator(); });
             "When I generate a series of OTPs"
-                .f(() => { otps = userIds.Select(u => generator.generate(u)); });
+                .f(() => { otps = userIds.Select(u => generator.GenerateUserCurrentOtpFromId(u)); });
             "They should be unique for each user."
                 .f(() => { otps.Should().OnlyHaveUniqueItems(); });
         }
@@ -42,11 +42,11 @@ namespace Ve.Otp.Authenticator.Spec
             "Give a User ID"
                 .f(() => { userId = "tom123"; });
             "And a generated OTP for that ID"
-                .f(() => { otp = (new Generator()).generate(userId); });
+                .f(() => { otp = (new Generator()).GenerateUserCurrentOtpFromId(userId); });
             "And a OTP validator"
                 .f(() => { validator = new Validator(); });
             "When I verify my OTP"
-                .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp); });
+                .f(() => { isValid = validator.ValidateUserFromIdUsingOtp(userId, otp); });
             "It should be valid."
                 .f(() => { isValid.Should().BeTrue(); });
         }
@@ -66,14 +66,14 @@ namespace Ve.Otp.Authenticator.Spec
                     {
                         var now = DateTime.UtcNow;
                         context.Setup(() => DateTime.UtcNow).Returns(now.AddSeconds(-secondsAgo));
-                        otp = (new Generator()).generate(userId);
+                        otp = (new Generator()).GenerateUserCurrentOtpFromId(userId);
                         context.Setup(() => DateTime.UtcNow).Returns(now);
                     });
                 });
             "And a OTP validator"
                 .f(() => { validator = new Validator(); });
             "When I verify my OTP"
-                .f(() => { isValid = validator.validateUserIdWithOtp(userId, otp); });
+                .f(() => { isValid = validator.ValidateUserFromIdUsingOtp(userId, otp); });
 
             string validationWording = shouldBeValid ? "valid" : "invalid";
             $"It should be {validationWording}."

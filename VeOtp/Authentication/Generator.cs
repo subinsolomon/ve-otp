@@ -6,52 +6,57 @@ namespace Ve.Otp.Authentication
 {
     public class Generator
     {
-        private HMACSHA1 Hash { get; }
-        private DateTime T0 { get; } = new DateTime(1970, 1, 1);
+        private HMACSHA1 KeyFunction { get; }
+
+        private DateTime CounterEpoch { get; } = new DateTime(1970, 1, 1);
 
         private const int OtpLength = 6;
 
         public Generator()
         {
-            const string SecretKey = "this isn't massivelysecret"; // Todo: Make secret.
-            Hash = new HMACSHA1(EncodeString(SecretKey));
+            const string SecretKey = "1234567812345678"; // Todo: Make secret.
+            KeyFunction = new HMACSHA1(Convert.FromBase64String(SecretKey));
         }
 
-        public string generate(string userId)
+        public string GenerateUserCurrentOtpFromId(string userId)
         {
-            return generate(userId, CurrentT);
+            return GenerateUserOtpFromIdAndCounter(userId, CurrentCounter);
         }
 
-        public string generate(string userId, long counter)
+        public string GenerateUserOtpFromIdAndCounter(string userId, long counter)
         {
-            var key = Hash.ComputeHash(EncodeString(userId));
-            return rfc6238(key, counter);
+            var key = KeyFromUserId(userId);
+            return TotpFromKeyAndCounter(key, counter);
         }
 
         private int Interval { get; } = 30;
 
-        public long CurrentT => (long)DateTime.UtcNow.Subtract(T0).TotalSeconds / Interval;
+        public long CurrentCounter => (long)DateTime.UtcNow.Subtract(CounterEpoch).TotalSeconds / Interval;
 
-        private string rfc6238(byte[] K, long C)
+        private byte[] KeyFromUserId(string userId)
         {
-            byte[] H = (
-                new HMACSHA1(K)
-                .ComputeHash(
-                    BitConverter.GetBytes(
-                        IPAddress.HostToNetworkOrder(
-                            C
-                        ))));
-            int O = H[H.Length - 1] & 0xf;
-            int dbc1 = (H[O] << 24) | (H[O + 1] << 16) | (H[O + 2] << 8) | (H[O + 3]);
-            int dbc2 = dbc1 & 0x7fffffff;
-            int dc = dbc2 % (int)Math.Pow(10, Interval);
-            string pdc = dc.ToString().PadLeft(OtpLength, '0');
-            return pdc.Substring(pdc.Length - OtpLength);
+            var encodedUserId = System.Text.Encoding.UTF8.GetBytes(userId);
+            return KeyFunction.ComputeHash(encodedUserId);
         }
 
-        private static byte[] EncodeString(string value)
+        /// <remarks>
+        /// Currently implemented using RFC6238 TOTP.
+        /// </remarks>
+        private string TotpFromKeyAndCounter(byte[] key, long counter)
         {
-            return System.Text.Encoding.UTF8.GetBytes(value);  
+            byte[] hash = (
+                new HMACSHA1(key)
+                .ComputeHash(
+                    BitConverter.GetBytes(IPAddress.HostToNetworkOrder(counter))
+                )
+            );
+            int offset = hash[hash.Length - 1] & 0xf;
+            int segment = 
+                ((hash[offset] << 24) | (hash[offset + 1] << 16) | (hash[offset + 2] << 8) | (hash[offset + 3]))
+                & 0x7fffffff;
+            int code = segment % (int)Math.Pow(10, Interval);
+            string paddedCode = code.ToString().PadLeft(OtpLength, '0');
+            return paddedCode.Substring(paddedCode.Length - OtpLength);
         }
     }
 }

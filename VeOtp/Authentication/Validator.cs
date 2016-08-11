@@ -12,10 +12,10 @@ namespace Ve.Otp.Authentication
             Generator = new Generator();
         }
 
-        public bool validateUserIdWithOtp(string userId, string otp)
+        public bool ValidateUserFromIdUsingOtp(string userId, string otp)
         {
-            var counter = Generator.CurrentT;
-            var validOtps = Enumerable.Range(0, 2).Select(i => Generator.generate(userId, counter - i));
+            var counter = Generator.CurrentCounter;
+            var validOtps = Enumerable.Range(0, 2).Select(i => Generator.GenerateUserOtpFromIdAndCounter(userId, counter - i));
             return validOtps.Any(o => o == otp);
         }
     }
