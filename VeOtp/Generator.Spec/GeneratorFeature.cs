@@ -12,7 +12,7 @@ namespace Ve.Otp.Generator.Spec
         public void Generation(string userId, OtpGenerator generator, string otp)
         {
             "Given a User ID"
-                .f(() => { userId = "tomw"; });
+                .f(() => { userId = "thomas_michael_wallace_13"; });
             "And a generator"
                 .f(() => { generator = new OtpGenerator(); });
             "When I request a OTP"
@@ -25,8 +25,7 @@ namespace Ve.Otp.Generator.Spec
         public void Unqiueness(List<string> userIds, OtpGenerator generator, IEnumerable<string> otps)
         {
             "Given a selection of User ID"
-                .f(() => { userIds = new List<string> { "alexande", "alexandr", "1234" }; });
-                // ToDo: Support non-4 letter long names.
+                .f(() => { userIds = new List<string> { "alexander", "alexandria", "123-456" }; });
             "And a generator"
                 .f(() => { generator = new OtpGenerator(); });
             "When I generate a series of OTPs"
