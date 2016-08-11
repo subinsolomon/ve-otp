@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Net;
 using System.Security.Cryptography;
 
@@ -8,7 +9,8 @@ namespace Ve.Otp.Authentication
     {
         public Generator()
         {
-            const string SecretKey = "1234567812345678"; // Todo: Make secret.
+            string SecretKey = ConfigurationManager.AppSettings["privateKey"]
+                ?? "1234567812345678"; // ToDo: Remove this once Fakes are instated in test.
             KeyFunction = new HMACSHA1(Convert.FromBase64String(SecretKey));
         }
 

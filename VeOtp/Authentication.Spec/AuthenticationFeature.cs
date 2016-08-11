@@ -62,8 +62,14 @@ namespace Ve.Otp.Authenticator.Spec
                 .f(() => { userId = "tom123"; });
             $"And a OTP generated {secondsAgo} seconds ago"
                 .f(() => {
-                    Smock.Run(context => // ToDo: Switch to Fakes with VS2015 Enterprise.
+                    Smock.Run(context =>
                     {
+                        /*
+                         * ToDo: Switch to Fakes with VS2015 Enterprise.
+                         * 
+                         * Smock's context switching breaks configuration; therefore Generator needs a 
+                         * default secret key that must match app.config in this test. 
+                         */
                         var now = DateTime.UtcNow;
                         context.Setup(() => DateTime.UtcNow).Returns(now.AddSeconds(-secondsAgo));
                         otp = (new Generator()).GenerateUserCurrentOtpFromId(userId);
