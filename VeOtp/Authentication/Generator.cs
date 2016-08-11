@@ -14,16 +14,13 @@ namespace Ve.Otp.Authentication
 
         public string GenerateUserCurrentOtpFromId(string userId)
         {
-            return GenerateUserOtpFromIdAndCounter(userId, CurrentCounter);
+            return GenerateUserOtpFromIdAndCounter(userId, Counter.Current);
         }
         public string GenerateUserOtpFromIdAndCounter(string userId, long counter)
         {
             var key = KeyFromUserId(userId);
             return TotpFromKeyAndCounter(key, counter);
         }
-
-        public long CurrentCounter => (long)DateTime.UtcNow.Subtract(CounterEpoch).TotalSeconds / Interval;
-
 
         private byte[] KeyFromUserId(string userId)
         {
@@ -46,15 +43,12 @@ namespace Ve.Otp.Authentication
             int segment = 
                 ((hash[offset] << 24) | (hash[offset + 1] << 16) | (hash[offset + 2] << 8) | (hash[offset + 3]))
                 & 0x7fffffff;
-            int code = segment % (int)Math.Pow(10, Interval);
+            int code = segment % (int)Math.Pow(10, OtpLength);
             string paddedCode = code.ToString().PadLeft(OtpLength, '0');
             return paddedCode.Substring(paddedCode.Length - OtpLength);
         }
 
         private HMACSHA1 KeyFunction { get; }
-
-        private int Interval { get; } = 30;
-        private DateTime CounterEpoch { get; } = new DateTime(1970, 1, 1);
 
         private const int OtpLength = 6;
     }
